@@ -8,8 +8,8 @@
     <title>Landing Page</title>
 </head>
 
-<body>
-    <nav class="relative bg-gray-800/50 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
+<body class="bg-red-500">
+    <nav class="relative bg-blue-900 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10">
         <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
             <div class="relative flex h-16 items-center justify-between">
                 <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -30,10 +30,10 @@
                     </div>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-4">
-                            <a href="#" aria-current="page" class="rounded-md bg-gray-950/50 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
-                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Team</a>
-                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Projects</a>
-                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</a>
+                            <a href="#" aria-current="page" class="rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white">Dashboard</a>
+                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-blue-300 hover:bg-blue-600 hover:text-white">Team</a>
+                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-blue-300 hover:bg-blue-600 hover:text-white">Projects</a>
+                            <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-blue-300 hover:bg-blue-600 hover:text-white">Calendar</a>
                         </div>
                     </div>
                 </div>
@@ -69,8 +69,18 @@
             </div>
         </el-disclosure>
     </nav>
+    <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 w-full p-4 scrollbar-hidden">
+        <div class="flex-shrink-0 w-80 h-48 bg-blue-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
+            Slide 1
+        </div>
+        <div class="flex-shrink-0 w-80 h-48 bg-green-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
+            Slide 2
+        </div>
+        <div class="flex-shrink-0 w-80 h-48 bg-red-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
+            Slide 3
+        </div>
+    </div>
+
 </body>
 
 </html>
-
-
