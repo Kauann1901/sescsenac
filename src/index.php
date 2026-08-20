@@ -69,18 +69,52 @@
             </div>
         </el-disclosure>
     </nav>
-    <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 scrollbar-hidden">
-        <div class="flex-shrink-0 w-full h-[350px] bg-blue-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
-            Slide 1
+    <div id="carousel-container" class="relative w-full overflow-hidden group">
+        <div id="slider" class="flex transition-transform duration-700 ease-in-out h-64 md:h-[450px]">
+            <div class="relative min-w-full h-full">
+                <img 
+                    src="../img/imagem2.jpg"
+                    class="w-full h-full object-cover"
+                    alt="Imagem 1">
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+            <div class="relative min-w-full h-full">
+                <img 
+                    src="../img/imagem3.jpg"
+                    class="w-full h-full object-cover"
+                    alt="Imagem 2">
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
+            <div class="relative min-w-full h-full">
+                <img 
+                    src="../img/imagem4.jpg"
+                    class="w-full h-full object-cover"
+                    alt="Imagem 3">
+                <div class="absolute inset-0 bg-black/50"></div>
+            </div>
         </div>
-        <div class="flex-shrink-0 w-full h-[350px] bg-green-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
-            Slide 2
+        <div class="absolute inset-0 z-10 flex items-center justify-center text-center px-6">
+            <div class="text-white">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight drop-shadow-2xl">
+                    Bem-vindo ao nosso portal
+                </h1>
+                <p class="mt-4 text-lg md:text-2xl lg:text-3xl font-medium drop-shadow-lg">
+                    Tudo o que você precisa em um só lugar.
+                </p>
+            </div>
         </div>
-        <div class="flex-shrink-0 w-full h-[350px] bg-red-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
-            Slide 3
-        </div>
+        <button 
+            id="prev"
+            class="absolute z-20 top-1/2 left-4 -translate-y-1/2 bg-white/80 p-3 rounded-full shadow hover:bg-white text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            ❮
+        </button>
+        <button 
+            id="next"
+            class="absolute z-20 top-1/2 right-4 -translate-y-1/2 bg-white/80 p-3 rounded-full shadow hover:bg-white text-gray-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            ❯
+        </button>
     </div>
-
+<script src="index.js"></script>
 </body>
 
 </html>

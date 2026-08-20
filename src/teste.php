@@ -49,7 +49,7 @@
                         <button class="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                             <span class="absolute -inset-1.5"></span>
                             <span class="sr-only">Open user menu</span>
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80%22 alt="" class="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10" />
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80%22 alt="" class=" size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10" />
                         </button>
                         <el-menu anchor="bottom end" popover class="w-48 origin-top-right rounded-md bg-gray-800 py-1 outline -outline-offset-1 outline-white/10 transition transition-discrete [--anchor-gap:--spacing(2)] data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in">
                             <a href="#" class="block px-4 py-2 text-sm text-gray-300 focus:bg-white/5 focus:outline-hidden">Your profile</a>
@@ -69,17 +69,8 @@
             </div>
         </el-disclosure>
     </nav>
-    <div class="flex overflow-x-auto snap-x snap-mandatory gap-4 scrollbar-hidden">
-        <div class="flex-shrink-0 w-full h-[350px] bg-blue-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
-            Slide 1
-        </div>
-        <div class="flex-shrink-0 w-full h-[350px] bg-green-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
-            Slide 2
-        </div>
-        <div class="flex-shrink-0 w-full h-[350px] bg-red-500 rounded-lg snap-center flex items-center justify-center text-white text-xl font-bold">
-            Slide 3
-        </div>
-    </div>
+    
+
 
 </body>
 
