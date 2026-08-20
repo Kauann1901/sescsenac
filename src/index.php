@@ -114,6 +114,102 @@
             ❯
         </button>
     </div>
+
+
+    <footer class="bg-[#00264B] text-white">
+            <div class="mx-auto max-w-7xl px-6 py-12">
+            <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold">
+                        Sesc/Senac
+                    </h2>
+                    <p class="mt-4 max-w-md text-sm leading-6 text-blue-200">
+                        Um espaço para conectar alunos, professores e instituições
+                        em um só lugar. Acompanhe eventos, atividades, avisos e
+                        muito mais.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider">
+                        Acesso rápido
+                    </h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Início
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Calendário
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Eventos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Atividades
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-sm font-semibold uppercase tracking-wider">
+                        Suporte
+                    </h3>
+                    <ul class="mt-4 space-y-3 text-sm">
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Central de ajuda
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Fale conosco
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Política de privacidade
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="text-blue-200 transition hover:text-white">
+                                Termos de uso
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="my-10 h-px bg-white/10"></div>
+            <div class="flex flex-col items-center justify-between gap-4 text-sm md:flex-row">
+                <p class="text-blue-200">
+                    © 2026 Sesc/Senac. Todos os direitos reservados.
+                </p>
+                <div class="flex gap-6">
+                    <a href="#"
+                        class="text-blue-200 transition hover:text-white">
+                        Instagram
+                    </a>
+                    <a href="#"
+                        class="text-blue-200 transition hover:text-white">
+                        LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
 <script src="index.js"></script>
 </body>
 
