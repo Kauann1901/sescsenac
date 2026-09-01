@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -96,7 +97,7 @@
     <section id="inicio" class="relative w-full overflow-hidden group">
         <div id="slider" class="flex transition-transform duration-700 ease-in-out h-72 md:h-[500px]">
             <div class="relative min-w-full h-full">
-                <img src="./img/imagem2.jpg" class="w-full h-full object-cover"alt="Ensino Médio">
+                <img src="./img/imagem2.jpg" class="w-full h-full object-cover" alt="Ensino Médio">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative min-w-full h-full">
@@ -134,7 +135,7 @@
                 <span class="text-sm font-bold uppercase tracking-wider text-blue-700">
                     Ensino Médio
                 </span>
-                <h1 class="mt-3 text-4xl font-black leading-tight text-blue-950 md:text-5xl"> Ensino Médio para <span class="text-blue-700">  transformar seu futuro </span></h1>
+                <h1 class="mt-3 text-4xl font-black leading-tight text-blue-950 md:text-5xl"> Ensino Médio para <span class="text-blue-700"> transformar seu futuro </span></h1>
                 <p class="mx-auto mt-6 max-w-xl text-base leading-relaxed text-gray-600 md:text-lg">
                     Uma formação que une conhecimento, tecnologia, criatividade
                     e preparação para o futuro. No Ensino Médio Sesc Senac,
@@ -157,7 +158,7 @@
         <div class="mx-auto max-w-6xl px-6 text-center">
             <span class="text-sm font-bold uppercase tracking-wider text-blue-700"> Educação integral </span>
             <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">Mais do que aprender, preparar para a vida</h2>
-            <p  class="mx-auto mt-5 max-w-3xl leading-relaxed text-gray-600">
+            <p class="mx-auto mt-5 max-w-3xl leading-relaxed text-gray-600">
                 A proposta educacional valoriza uma formação integral,
                 buscando desenvolver aspectos acadêmicos, culturais, sociais
                 e pessoais. O estudante é incentivado a participar ativamente
@@ -252,7 +253,7 @@
             </div>
         </div>
     </section>
-    <section  id="atividades" class="bg-white py-20">
+    <section id="atividades" class="bg-white py-20">
         <div class="mx-auto max-w-6xl px-6">
             <div class="text-center">
                 <span class="text-sm font-bold uppercase tracking-wider text-blue-700">
@@ -378,12 +379,12 @@
             </div>
         </div>
     </section>
-    <section id="feiras"class="bg-white py-20">
+    <section id="feiras" class="bg-white py-20">
         <div class="mx-auto max-w-6xl px-6">
             <div class="text-center">
                 <spanclass="text-sm font-bold uppercase tracking-wider text-blue-700">Eventos</spanclass=>
-                <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">Feiras e eventos</h2>
-                <p class="mx-auto mt-4 max-w-2xl text-gray-600">Momentos de aprendizagem, criatividade e compartilhamentodos trabalhos desenvolvidos pelos estudantes.</p>
+                    <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">Feiras e eventos</h2>
+                    <p class="mx-auto mt-4 max-w-2xl text-gray-600">Momentos de aprendizagem, criatividade e compartilhamentodos trabalhos desenvolvidos pelos estudantes.</p>
             </div>
             <div class="mt-10 grid gap-6 md:grid-cols-3">
                 <div class="group rounded-2xl border border-gray-100 bg-white p-7 shadow-md hover:-translate-y-2 hover:shadow-xl transition">
@@ -460,6 +461,91 @@
             </p>
         </div>
     </section>
+    <section id="comentarios" class="py-16 bg-gray-100">
+
+        <div class="max-w-5xl mx-auto px-6">
+
+            <h2 class="text-3xl font-bold text-blue-900 text-center mb-10">
+                Comentários
+            </h2>
+
+
+            <div class="bg-white p-6 rounded-xl shadow mb-10">
+
+                <h3 class="text-xl font-bold mb-5">
+                    Deixe seu comentário
+                </h3>
+
+                <form action="salvar_comentario.php" method="POST">
+
+                    <input
+                        type="text"
+                        name="nome"
+                        placeholder="Seu nome"
+                        required
+                        maxlength="100"
+                        class="w-full border rounded-lg p-3 mb-4">
+
+                    <textarea
+                        name="comentario"
+                        placeholder="Digite seu comentário..."
+                        required
+                        maxlength="1000"
+                        rows="5"
+                        class="w-full border rounded-lg p-3 mb-4"></textarea>
+
+                    <button
+                        type="submit"
+                        class="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800">
+
+                        Enviar comentário
+
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <?php
+
+                require_once __DIR__ . '/database/conexao.php';
+
+            $stmt = $pdo->query("
+            SELECT *
+            FROM comentarios
+            WHERE status = 'aprovado'
+            ORDER BY data_criacao DESC
+        ");
+
+            $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            ?>
+
+
+            <div class="space-y-5">
+
+                <?php foreach ($comentarios as $comentario): ?>
+
+                    <div class="bg-white p-5 rounded-xl shadow">
+
+                        <h3 class="font-bold text-lg">
+                            <?= htmlspecialchars($comentario['nome']) ?>
+                        </h3>
+
+                        <p class="text-gray-700 mt-2">
+                            <?= nl2br(htmlspecialchars($comentario['comentario'])) ?>
+                        </p>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        </div>
+
+    </section>
     <footer class="bg-blue-50 text-black">
         <div class="mx-auto max-w-7xl px-6 py-12">
             <div class="grid gap-8 md:grid-cols-3">
@@ -478,7 +564,7 @@
                     <div class="mt-4 flex flex-col gap-2 text-sm text-blue-500">
                         <a href="#inicio" class="hover:text-black transition"> Início</a>
                         <a href="#sobrenos" class="hover:text-black transition"> Sobre nós</a>
-                        <a href="#cursos" class="hover:text-black transition"> Cursos</a>   
+                        <a href="#cursos" class="hover:text-black transition"> Cursos</a>
                         <a href="#projetos" class="hover:text-black transition"> Projetos</a>
                         <a href="#feiras" class="hover:text-black transition"> Feiras</a>
                         <a href="#atividades" class="hover:text-black transition"> Atividades</a>
