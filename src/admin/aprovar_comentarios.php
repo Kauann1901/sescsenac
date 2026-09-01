@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($id) {
 
         $stmt = $pdo->prepare("
-            UPDATE comentarios
+            UPDATE depoimentos
             SET status = 'aprovado'
             WHERE id = ?
         ");

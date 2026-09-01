@@ -11,7 +11,7 @@ require_once "../conexao.php";
 
 $stmt = $pdo->query("
     SELECT *
-    FROM comentarios
+    FROM depoimentos
     ORDER BY data_criacao DESC
 ");
 
@@ -55,7 +55,7 @@ $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <main class="max-w-6xl mx-auto p-6">
 
-<?php if (empty($comentarios)): ?>
+<?php if (empty($depoimentos)): ?>
 
     <div class="bg-white p-6 rounded-xl shadow">
         Nenhum comentário encontrado.
@@ -64,17 +64,17 @@ $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <?php endif; ?>
 
 
-<?php foreach ($comentarios as $comentario): ?>
+<?php foreach ($depoimentos as $depoimento): ?>
 
     <div class="bg-white p-6 rounded-xl shadow mb-5">
 
         <div class="flex justify-between">
 
             <h2 class="font-bold text-xl">
-                <?= htmlspecialchars($comentario['nome']) ?>
+                <?= htmlspecialchars($depoimento['nome']) ?>
             </h2>
 
-            <?php if ($comentario['status'] === 'aprovado'): ?>
+            <?php if ($depoimento['status'] === 'aprovado'): ?>
 
                 <span class="text-green-600 font-bold">
                     Aprovado
@@ -92,20 +92,20 @@ $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
         <p class="mt-4 text-gray-700">
-            <?= nl2br(htmlspecialchars($comentario['comentario'])) ?>
+            <?= nl2br(htmlspecialchars($depoimento['depoimento'])) ?>
         </p>
 
 
         <div class="mt-5 flex gap-3">
 
-            <?php if ($comentario['status'] === 'pendente'): ?>
+            <?php if ($depoimento['status'] === 'pendente'): ?>
 
-                <form action="aprovar_comentario.php" method="POST">
+                <form action="aprovar_depoimento.php" method="POST">
 
                     <input
                         type="hidden"
                         name="id"
-                        value="<?= $comentario['id'] ?>">
+                        value="<?= $depoimento['id'] ?>">
 
                     <button
                         class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
@@ -119,12 +119,12 @@ $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
 
 
-            <form action="excluir_comentario.php" method="POST">
+            <form action="excluir_depoimento.php" method="POST">
 
                 <input
                     type="hidden"
                     name="id"
-                    value="<?= $comentario['id'] ?>">
+                    value="<?= $depoimento  ['id'] ?>">
 
                 <button
                     class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">

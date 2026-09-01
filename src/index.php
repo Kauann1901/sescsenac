@@ -461,90 +461,54 @@
             </p>
         </div>
     </section>
-    <section id="comentarios" class="py-16 bg-gray-100">
-
-        <div class="max-w-5xl mx-auto px-6">
-
-            <h2 class="text-3xl font-bold text-blue-900 text-center mb-10">
-                Comentários
-            </h2>
+    <section class="flex justify-center items-center">
+        <form
+            class="flex flex-col items-start justify-center w-1/2 h-[500px]
+            shadow-2xl border border-[rgba(0,0,0,0.05)] rounded-lg m-5 p-5 gap-3"
+            method="POST">
 
 
-            <div class="bg-white p-6 rounded-xl shadow mb-10">
-
-                <h3 class="text-xl font-bold mb-5">
-                    Deixe seu comentário
-                </h3>
-
-                <form action="salvar_comentario.php" method="POST">
-
-                    <input
-                        type="text"
-                        name="nome"
-                        placeholder="Seu nome"
-                        required
-                        maxlength="100"
-                        class="w-full border rounded-lg p-3 mb-4">
-
-                    <textarea
-                        name="comentario"
-                        placeholder="Digite seu comentário..."
-                        required
-                        maxlength="1000"
-                        rows="5"
-                        class="w-full border rounded-lg p-3 mb-4"></textarea>
-
-                    <button
-                        type="submit"
-                        class="bg-blue-900 text-white px-6 py-3 rounded-lg hover:bg-blue-800">
-
-                        Enviar comentário
-
-                    </button>
-
-                </form>
-
-            </div>
+            <h1>Formulario Depoimento</h1>
 
 
-            <?php
-
-                require_once __DIR__ . '/database/conexao.php';
-
-            $stmt = $pdo->query("
-            SELECT *
-            FROM comentarios
-            WHERE status = 'aprovado'
-            ORDER BY data_criacao DESC
-        ");
-
-            $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            ?>
+            <label for="nome">Nome:</label>
+            <input
+                id="nome"
+                name="nome"
+                type="text"
+                required
+                class="w-full rounded-lg border border-gray-300 px-4 py-3 shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg">
 
 
-            <div class="space-y-5">
+            <label for="depoimento">Depoimento:</label>
+            <textarea
+                id="depoimento"
+                name="depoimento"
+                required
+                class="w-full h-32 rounded-lg border border-gray-300 px-4 py-3 resize-none shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg"></textarea>
 
-                <?php foreach ($comentarios as $comentario): ?>
 
-                    <div class="bg-white p-5 rounded-xl shadow">
+            <label for="avaliacao">Avaliação:</label>
+            <select
+                id="avaliacao"
+                name="avaliacao"
+                required
+                class="w-full rounded-lg border border-gray-300 px-4 py-3 shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg">
+                <option value="">Selecione uma avaliação</option>
+                <option value="1">⭐ 1 estrela</option>
+                <option value="2">⭐ 2 estrelas</option>
+                <option value="3">⭐ 3 estrelas</option>
+                <option value="4">⭐ 4 estrelas</option>
+                <option value="5">⭐ 5 estrelas</option>
+            </select>
 
-                        <h3 class="font-bold text-lg">
-                            <?= htmlspecialchars($comentario['nome']) ?>
-                        </h3>
 
-                        <p class="text-gray-700 mt-2">
-                            <?= nl2br(htmlspecialchars($comentario['comentario'])) ?>
-                        </p>
-
-                    </div>
-
-                <?php endforeach; ?>
-
-            </div>
-
-        </div>
-
+            <button
+                type="submit"
+                class="mt-3 w-1/3 self-center rounded-lg bg-[#00264B] justify-center px-4 py-3 text-white hover:bg-blue-700 shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg">
+                Enviar depoimento
+            </button>
+        </form>
     </section>
     <footer class="bg-blue-50 text-black">
         <div class="mx-auto max-w-7xl px-6 py-12">
@@ -581,6 +545,10 @@
                         acadêmico, profissional e pessoal dos estudantes.
                     </p>
                 </div>
+            </div>
+            <div>
+                <a href="./login.php" class="hover:text-black transition"> Área do Administrador</a>
+            </div>
             </div>
             <div class="mt-10 border-t border-white/10 pt-6 text-center text-sm text-blue-500">
                 © 2026 Ensino Médio Sesc Senac. Todos os direitos reservados.
