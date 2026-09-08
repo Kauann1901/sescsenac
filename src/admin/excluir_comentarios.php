@@ -2,27 +2,44 @@
 
 session_start();
 
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: ../index.php");
+if (
+    !isset($_SESSION["usuario_id"]) ||
+    $_SESSION["logado"] !== true
+) {
+
+    header("Location: ../login.php");
     exit;
+
 }
 
-require_once "../conexao.php";
+require_once "../database/conexao.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+$id = filter_input(
+    INPUT_POST,
+    "id",
+    FILTER_VALIDATE_INT
+);
 
-    if ($id) {
 
-        $stmt = $pdo->prepare("
-            DELETE FROM comentarios
-            WHERE id = ?
-        ");
+if (!$id) {
 
-        $stmt->execute([$id]);
-    }
+    header("Location: comentarios.php");
+    exit;
+
 }
+
+
+$stmt = $pdo->prepare("
+    DELETE FROM depoimentos
+    WHERE id = :id
+");
+
+
+$stmt->execute([
+    ":id" => $id
+]);
+
 
 header("Location: comentarios.php");
 exit;

@@ -1,30 +1,36 @@
 <?php
 
-require_once __DIR__ . '/../conexao.php';
+require_once __DIR__ . "/../database/conexao.php";
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header("Location: index.php");
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    header("Location: ../../index.php");
     exit;
 }
 
-$nome = trim($_POST['nome'] ?? '');
-$depoimento = trim($_POST['depoimento'] ?? '');
+$nome = trim($_POST["nome"] ?? "");
+$depoimento = trim($_POST["depoimento"] ?? "");
+$avaliacao = (int)($_POST["avaliacao"] ?? 0);
 
-if ($nome === '' || $depoimento === '') {
-    header("Location: index.php#comentarios");
-    exit;
+if ($nome === "" || $depoimento === "") {
+    die("Preencha todos os campos.");
 }
 
-$stmt = $pdo->prepare("
-    INSERT INTO depoimentos
-    (nome, depoimento, status)
-    VALUES (?, ?, 'pendente')
-");
+if ($avaliacao < 1 || $avaliacao > 5) {
+    die("Avaliação inválida.");
+}
+
+$sql = "INSERT INTO depoimentos
+        (nome, depoimento, avaliacao, status)
+        VALUES
+        (:nome, :depoimento, :avaliacao, 'pendente')";
+
+$stmt = $pdo->prepare($sql);
 
 $stmt->execute([
-    $nome,
-    $depoimento
+    ":nome" => $nome,
+    ":depoimento" => $depoimento,
+    ":avaliacao" => $avaliacao
 ]);
 
-header("Location: index.php#comentarios");
+header("Location: ../../index.php?comentario=enviado");
 exit;

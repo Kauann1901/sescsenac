@@ -2,24 +2,69 @@
 
 session_start();
 
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: ../index.php");
+if (
+    !isset($_SESSION["usuario_id"]) ||
+    !isset($_SESSION["logado"]) ||
+    $_SESSION["logado"] !== true
+) {
+
+    header("Location: ../login.php");
     exit;
+
 }
 
-require_once "../conexao.php";
+require_once "../database/conexao.php";
 
-$totalComentarios = $pdo
-    ->query("SELECT COUNT(*) FROM comentarios WHERE status = 'pendente'")
-    ->fetchColumn();
 
-$totalConteudos = $pdo
-    ->query("SELECT COUNT(*) FROM conteudos")
-    ->fetchColumn();
+/* Comentários pendentes */
 
-$totalImagens = $pdo
-    ->query("SELECT COUNT(*) FROM imagens")
-    ->fetchColumn();
+$stmt = $pdo->query("
+    SELECT COUNT(*)
+    FROM depoimentos
+    WHERE status = 'pendente'
+");
+
+$totalPendentes = $stmt->fetchColumn();
+
+
+/* Total de depoimentos */
+
+$stmt = $pdo->query("
+    SELECT COUNT(*)
+    FROM depoimentos
+");
+
+$totalDepoimentos = $stmt->fetchColumn();
+
+
+/* Contar imagens */
+
+$pastaImagens = __DIR__ . "/../img";
+
+$totalImagens = 0;
+
+if (is_dir($pastaImagens)) {
+
+    $arquivos = scandir($pastaImagens);
+
+    foreach ($arquivos as $arquivo) {
+
+        $extensao = strtolower(
+            pathinfo($arquivo, PATHINFO_EXTENSION)
+        );
+
+        if (
+            in_array(
+                $extensao,
+                ["jpg", "jpeg", "png", "gif", "webp"]
+            )
+        ) {
+
+            $totalImagens++;
+
+        }
+    }
+}
 
 ?>
 
@@ -27,59 +72,184 @@ $totalImagens = $pdo
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Painel Administrativo</title>
 
-    <link rel="stylesheet" href="../output.css">
+    <link
+        rel="stylesheet"
+        href="../css/output.css">
+
 </head>
 
-<body class="bg-gray-100 min-h-screen">
 
-    <header class="bg-blue-900 text-white p-5">
+<body class="min-h-screen bg-gray-100">
 
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
+
+<header class="bg-blue-900 text-white shadow-lg">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+
+        <div>
 
             <h1 class="text-2xl font-bold">
                 Painel Administrativo
             </h1>
 
-            <a
-                href="logout.php"
-                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg">
-                Sair
-            </a>
+            <p class="text-sm text-blue-200">
+                SESC SENAC - Ensino Médio
+            </p>
 
         </div>
 
-    </header>
+
+        <a
+            href="logout.php"
+            class="rounded-lg bg-red-600 px-5 py-2 font-semibold transition hover:bg-red-700">
+
+            Sair
+
+        </a>
+
+    </div>
+
+</header>
 
 
-    <main class="max-w-7xl mx-auto p-6">
-
-        <h2 class="text-3xl font-bold text-blue-900 mb-8">
-            Administração do site
-        </h2>
+<main class="mx-auto max-w-7xl px-6 py-10">
 
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <h2 class="text-3xl font-bold text-blue-900">
+        Administração do site
+    </h2>
+
+
+    <p class="mt-2 text-gray-600">
+
+        Bem-vindo,
+        <?= htmlspecialchars($_SESSION["nome"]) ?>.
+
+    </p>
+
+
+    <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+
+
+        <!-- COMENTÁRIOS -->
+
+        <a
+            href="comentarios.php"
+            class="rounded-2xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+
+            <div class="mb-5 text-4xl">
+                💬
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800">
+                Comentários
+            </h3>
+
+            <p class="mt-2 text-gray-500">
+                Comentários aguardando aprovação.
+            </p>
+
+            <p class="mt-5 text-4xl font-bold text-blue-900">
+                <?= $totalPendentes ?>
+            </p>
+
+            <p class="text-sm text-gray-500">
+                pendentes
+            </p>
+
+        </a>
+
+
+        <!-- IMAGENS -->
+
+        <a
+            href="imagens.php"
+            class="rounded-2xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+
+            <div class="mb-5 text-4xl">
+                🖼️
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800">
+                Imagens
+            </h3>
+
+            <p class="mt-2 text-gray-500">
+                Imagens disponíveis no site.
+            </p>
+
+            <p class="mt-5 text-4xl font-bold text-blue-900">
+                <?= $totalImagens ?>
+            </p>
+
+            <p class="text-sm text-gray-500">
+                imagens
+            </p>
+
+        </a>
+
+
+        <!-- DEPOIMENTOS -->
+
+        <a
+            href="comentarios.php"
+            class="rounded-2xl bg-white p-6 shadow-md transition hover:-translate-y-1 hover:shadow-xl">
+
+            <div class="mb-5 text-4xl">
+                ⭐
+            </div>
+
+            <h3 class="text-xl font-bold text-gray-800">
+                Depoimentos
+            </h3>
+
+            <p class="mt-2 text-gray-500">
+                Total de depoimentos cadastrados.
+            </p>
+
+            <p class="mt-5 text-4xl font-bold text-blue-900">
+                <?= $totalDepoimentos ?>
+            </p>
+
+            <p class="text-sm text-gray-500">
+                cadastrados
+            </p>
+
+        </a>
+
+
+    </div>
+
+
+    <div class="mt-10 rounded-2xl bg-white p-8 shadow-md">
+
+        <h3 class="text-2xl font-bold text-blue-900">
+            Gerenciamento
+        </h3>
+
+
+        <div class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
 
 
             <a
                 href="comentarios.php"
-                class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+                class="rounded-lg border border-gray-200 p-5 transition hover:border-blue-900 hover:bg-blue-50">
 
-                <h3 class="text-xl font-bold mb-3">
-                    💬 Comentários
-                </h3>
-
-                <p class="text-gray-600">
-                    Comentários pendentes:
+                <p class="font-bold text-blue-900">
+                    💬 Gerenciar comentários
                 </p>
 
-                <p class="text-4xl font-bold text-blue-900 mt-2">
-                    <?= $totalComentarios ?>
+                <p class="mt-1 text-sm text-gray-500">
+                    Aprovar ou excluir comentários.
                 </p>
 
             </a>
@@ -87,57 +257,46 @@ $totalImagens = $pdo
 
             <a
                 href="imagens.php"
-                class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+                class="rounded-lg border border-gray-200 p-5 transition hover:border-blue-900 hover:bg-blue-50">
 
-                <h3 class="text-xl font-bold mb-3">
-                    🖼️ Imagens
-                </h3>
-
-                <p class="text-gray-600">
-                    Imagens cadastradas:
+                <p class="font-bold text-blue-900">
+                    🖼️ Gerenciar imagens
                 </p>
 
-                <p class="text-4xl font-bold text-blue-900 mt-2">
-                    <?= $totalImagens ?>
+                <p class="mt-1 text-sm text-gray-500">
+                    Substituir imagens do site.
                 </p>
 
             </a>
 
-
-            <a
-                href="conteudos.php"
-                class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
-
-                <h3 class="text-xl font-bold mb-3">
-                    📝 Conteúdos
-                </h3>
-
-                <p class="text-gray-600">
-                    Conteúdos cadastrados:
-                </p>
-
-                <p class="text-4xl font-bold text-blue-900 mt-2">
-                    <?= $totalConteudos ?>
-                </p>
-
-            </a>
 
         </div>
 
+    </div>
 
-        <div class="mt-10">
 
-            <a
-                href="../index.php"
-                class="text-blue-900 hover:underline">
+    <div class="mt-8">
 
-                ← Voltar para o site
+        <a
+            href="../index.php"
+            class="font-semibold text-blue-900 hover:underline">
 
-            </a>
+            ← Voltar para o site
 
-        </div>
+        </a>
 
-    </main>
+    </div>
+
+
+</main>
+
+
+<footer class="bg-blue-900 py-5 text-center text-sm text-white">
+
+    © <?= date("Y") ?> SESC SENAC - Ensino Médio
+
+</footer>
+
 
 </body>
 

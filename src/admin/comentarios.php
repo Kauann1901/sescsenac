@@ -2,20 +2,33 @@
 
 session_start();
 
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: ../index.php");
+if (
+    !isset($_SESSION["usuario_id"]) ||
+    !isset($_SESSION["logado"]) ||
+    $_SESSION["logado"] !== true
+) {
+
+    header("Location: ../login.php");
     exit;
+
 }
 
-require_once "../conexao.php";
+require_once "../database/conexao.php";
+
 
 $stmt = $pdo->query("
-    SELECT *
+    SELECT
+        id,
+        nome,
+        depoimento,
+        data_criacao,
+        avaliacao,
+        status
     FROM depoimentos
     ORDER BY data_criacao DESC
 ");
 
-$comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$depoimentos = $stmt->fetchAll();
 
 ?>
 
@@ -26,26 +39,36 @@ $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
     <title>Comentários</title>
 
-    <link rel="stylesheet" href="../output.css">
+    <link
+        rel="stylesheet"
+        href="../css/output.css">
 
 </head>
 
-<body class="bg-gray-100 min-h-screen">
 
-<header class="bg-blue-900 text-white p-5">
+<body class="min-h-screen bg-gray-100">
 
-    <div class="max-w-6xl mx-auto flex justify-between">
+
+<header class="bg-blue-900 px-6 py-5 text-white">
+
+    <div class="mx-auto flex max-w-7xl items-center justify-between">
 
         <h1 class="text-2xl font-bold">
-            Gerenciar comentários
+            Gerenciar Comentários
         </h1>
 
-        <a href="index.php">
-            ← Painel
+        <a
+            href="index.php"
+            class="rounded-lg bg-white px-4 py-2 font-semibold text-blue-900">
+
+            Painel
+
         </a>
 
     </div>
@@ -53,95 +76,162 @@ $comentarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </header>
 
 
-<main class="max-w-6xl mx-auto p-6">
-
-<?php if (empty($depoimentos)): ?>
-
-    <div class="bg-white p-6 rounded-xl shadow">
-        Nenhum comentário encontrado.
-    </div>
-
-<?php endif; ?>
+<main class="mx-auto max-w-6xl px-6 py-10">
 
 
-<?php foreach ($depoimentos as $depoimento): ?>
+    <h2 class="mb-8 text-3xl font-bold text-blue-900">
+        Comentários enviados
+    </h2>
 
-    <div class="bg-white p-6 rounded-xl shadow mb-5">
 
-        <div class="flex justify-between">
+    <?php if (empty($depoimentos)): ?>
 
-            <h2 class="font-bold text-xl">
-                <?= htmlspecialchars($depoimento['nome']) ?>
-            </h2>
+        <div class="rounded-xl bg-white p-8 text-center shadow">
 
-            <?php if ($depoimento['status'] === 'aprovado'): ?>
-
-                <span class="text-green-600 font-bold">
-                    Aprovado
-                </span>
-
-            <?php else: ?>
-
-                <span class="text-yellow-600 font-bold">
-                    Pendente
-                </span>
-
-            <?php endif; ?>
+            <p class="text-gray-500">
+                Nenhum comentário encontrado.
+            </p>
 
         </div>
 
-
-        <p class="mt-4 text-gray-700">
-            <?= nl2br(htmlspecialchars($depoimento['depoimento'])) ?>
-        </p>
+    <?php endif; ?>
 
 
-        <div class="mt-5 flex gap-3">
-
-            <?php if ($depoimento['status'] === 'pendente'): ?>
-
-                <form action="aprovar_depoimento.php" method="POST">
-
-                    <input
-                        type="hidden"
-                        name="id"
-                        value="<?= $depoimento['id'] ?>">
-
-                    <button
-                        class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-
-                        Aprovar
-
-                    </button>
-
-                </form>
-
-            <?php endif; ?>
+    <div class="space-y-5">
 
 
-            <form action="excluir_depoimento.php" method="POST">
+        <?php foreach ($depoimentos as $depoimento): ?>
 
-                <input
-                    type="hidden"
-                    name="id"
-                    value="<?= $depoimento  ['id'] ?>">
 
-                <button
-                    class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+            <div class="rounded-xl bg-white p-6 shadow">
 
-                    Excluir
 
-                </button>
+                <div class="flex flex-col justify-between gap-4 md:flex-row">
 
-            </form>
 
-        </div>
+                    <div class="flex-1">
+
+
+                        <div class="flex flex-wrap items-center gap-3">
+
+                            <h3 class="text-xl font-bold text-gray-800">
+
+                                <?= htmlspecialchars($depoimento["nome"]) ?>
+
+                            </h3>
+
+
+                            <?php if ($depoimento["status"] === "aprovado"): ?>
+
+                                <span class="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
+
+                                    Aprovado
+
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="rounded-full bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700">
+
+                                    Pendente
+
+                                </span>
+
+                            <?php endif; ?>
+
+
+                        </div>
+
+
+                        <p class="mt-2 text-yellow-500">
+
+                            <?= str_repeat("★", (int)$depoimento["avaliacao"]) ?>
+
+                        </p>
+
+
+                        <p class="mt-4 text-gray-700">
+
+                            <?= nl2br(htmlspecialchars($depoimento["depoimento"])) ?>
+
+                        </p>
+
+
+                        <p class="mt-4 text-sm text-gray-400">
+
+                            <?= htmlspecialchars($depoimento["data_criacao"]) ?>
+
+                        </p>
+
+
+                    </div>
+
+
+                    <div class="flex flex-wrap items-center gap-3">
+
+
+                        <?php if ($depoimento["status"] === "pendente"): ?>
+
+                            <form
+                                action="aprovar_comentarios.php"
+                                method="POST">
+
+                                <input
+                                    type="hidden"
+                                    name="id"
+                                    value="<?= $depoimento["id"] ?>">
+
+                                <button
+                                    type="submit"
+                                    class="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700">
+
+                                    Aprovar
+
+                                </button>
+
+                            </form>
+
+                        <?php endif; ?>
+
+
+                        <form
+                            action="excluir_comentarios.php"
+                            method="POST"
+                            onsubmit="return confirm('Deseja realmente excluir este comentário?');">
+
+                            <input
+                                type="hidden"
+                                name="id"
+                                value="<?= $depoimento["id"] ?>">
+
+                            <button
+                                type="submit"
+                                class="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700">
+
+                                Excluir
+
+                            </button>
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        <?php endforeach; ?>
+
 
     </div>
 
-<?php endforeach; ?>
 
 </main>
 
 </body>
+
 </html>

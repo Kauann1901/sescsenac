@@ -2,68 +2,235 @@
 
 session_start();
 
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: ../index.php");
+
+// =====================================================
+// VERIFICAR LOGIN
+// =====================================================
+
+if (
+    !isset($_SESSION["usuario_id"]) ||
+    !isset($_SESSION["logado"]) ||
+    $_SESSION["logado"] !== true
+) {
+    header("Location: ../login.php");
     exit;
 }
 
-require_once "../conexao.php";
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+// =====================================================
+// VERIFICAR MÉTODO
+// =====================================================
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: imagens.php");
     exit;
 }
 
-$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
-if (!$id || !isset($_FILES['imagem'])) {
-    header("Location: imagens.php");
+// =====================================================
+// PEGAR IMAGEM ATUAL
+// =====================================================
+
+$imagemAtual = $_POST["imagem_atual"] ?? "";
+
+if ($imagemAtual === "") {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("Imagem atual não informada.")
+    );
+
     exit;
 }
 
 
-$arquivo = $_FILES['imagem'];
+// Segurança
+$imagemAtual = basename($imagemAtual);
+
+
+// =====================================================
+// VERIFICAR ARQUIVO
+// =====================================================
+
+if (
+    !isset($_FILES["nova_imagem"]) ||
+    !is_array($_FILES["nova_imagem"])
+) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("Nenhum arquivo foi enviado.")
+    );
+
+    exit;
+}
+
+
+$arquivo = $_FILES["nova_imagem"];
+
+
+// =====================================================
+// VERIFICAR ERRO DO UPLOAD
+// =====================================================
+
+if ($arquivo["error"] !== UPLOAD_ERR_OK) {
+
+    switch ($arquivo["error"]) {
+
+        case UPLOAD_ERR_INI_SIZE:
+            $erro = "O arquivo ultrapassa o limite permitido pelo PHP.";
+            break;
+
+        case UPLOAD_ERR_FORM_SIZE:
+            $erro = "O arquivo é muito grande.";
+            break;
+
+        case UPLOAD_ERR_PARTIAL:
+            $erro = "O upload foi enviado apenas parcialmente.";
+            break;
+
+        case UPLOAD_ERR_NO_FILE:
+            $erro = "Nenhum arquivo foi selecionado.";
+            break;
+
+        default:
+            $erro = "Erro desconhecido durante o upload.";
+            break;
+    }
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode($erro)
+    );
+
+    exit;
+}
+
+
+// =====================================================
+// VERIFICAR TAMANHO
+// =====================================================
+
+if ($arquivo["size"] > 5 * 1024 * 1024) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("A imagem deve ter no máximo 5 MB.")
+    );
+
+    exit;
+}
+
+
+// =====================================================
+// VERIFICAR SE É IMAGEM
+// =====================================================
+
+$informacoes = getimagesize($arquivo["tmp_name"]);
+
+if ($informacoes === false) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("O arquivo selecionado não é uma imagem.")
+    );
+
+    exit;
+}
+
+
+// =====================================================
+// TIPOS PERMITIDOS
+// =====================================================
 
 $tiposPermitidos = [
-    'image/jpeg' => 'jpg',
-    'image/png' => 'png',
-    'image/webp' => 'webp'
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp"
 ];
 
-if (!isset($tiposPermitidos[$arquivo['type']])) {
-    die("Formato de imagem não permitido.");
+
+if (!in_array($informacoes["mime"], $tiposPermitidos, true)) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("Tipo de imagem não permitido.")
+    );
+
+    exit;
 }
 
 
-if ($arquivo['error'] !== UPLOAD_ERR_OK) {
-    die("Erro ao enviar a imagem.");
+// =====================================================
+// PASTA DAS IMAGENS
+// =====================================================
+
+$pasta = __DIR__ . "/../img";
+
+
+if (!is_dir($pasta)) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("A pasta src/img não existe.")
+    );
+
+    exit;
 }
 
 
-$nomeArquivo = uniqid('banner_', true)
-    . '.'
-    . $tiposPermitidos[$arquivo['type']];
+// =====================================================
+// VERIFICAR PERMISSÃO DA PASTA
+// =====================================================
 
+if (!is_writable($pasta)) {
 
-$caminho = "../img/" . $nomeArquivo;
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("A pasta src/img não possui permissão para gravação.")
+    );
 
-
-if (!move_uploaded_file($arquivo['tmp_name'], $caminho)) {
-    die("Não foi possível salvar a imagem.");
+    exit;
 }
 
 
-$stmt = $pdo->prepare("
-    UPDATE imagens
-    SET arquivo = ?
-    WHERE id = ?
-");
+// =====================================================
+// DESTINO
+// =====================================================
 
-$stmt->execute([
-    $nomeArquivo,
-    $id
-]);
+$destino = $pasta . "/" . $imagemAtual;
 
 
-header("Location: imagens.php");
+// =====================================================
+// SALVAR NOVA IMAGEM
+// =====================================================
+
+if (!move_uploaded_file(
+    $arquivo["tmp_name"],
+    $destino
+)) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("O PHP não conseguiu substituir a imagem.")
+    );
+
+    exit;
+}
+
+
+// =====================================================
+// LIMPAR CACHE DO PHP
+// =====================================================
+
+clearstatcache(true, $destino);
+
+
+// =====================================================
+// VOLTAR
+// =====================================================
+
+header("Location: imagens.php?sucesso=1");
+
 exit;

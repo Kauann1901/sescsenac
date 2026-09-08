@@ -2,16 +2,44 @@
 
 session_start();
 
-if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'admin') {
-    header("Location: ../index.php");
+if (
+    !isset($_SESSION["usuario_id"]) ||
+    !isset($_SESSION["logado"]) ||
+    $_SESSION["logado"] !== true
+) {
+
+    header("Location: ../login.php");
     exit;
 }
 
-require_once "../conexao.php";
 
-$imagens = $pdo
-    ->query("SELECT * FROM imagens ORDER BY id")
-    ->fetchAll(PDO::FETCH_ASSOC);
+$pastaImagens = __DIR__ . "/../img";
+
+
+$imagens = [];
+
+
+if (is_dir($pastaImagens)) {
+
+    $arquivos = scandir($pastaImagens);
+
+    foreach ($arquivos as $arquivo) {
+
+        $extensao = strtolower(
+            pathinfo($arquivo, PATHINFO_EXTENSION)
+        );
+
+        if (
+            in_array(
+                $extensao,
+                ["jpg", "jpeg", "png", "gif", "webp"]
+            )
+        ) {
+
+            $imagens[] = $arquivo;
+        }
+    }
+}
 
 ?>
 
@@ -22,83 +50,151 @@ $imagens = $pdo
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
-    <title>Gerenciar imagens</title>
+    <title>Gerenciar Imagens</title>
 
-    <link rel="stylesheet" href="../output.css">
+    <link
+        rel="stylesheet"
+        href="../css/output.css">
 
 </head>
 
-<body class="bg-gray-100">
 
-<header class="bg-blue-900 text-white p-5">
-
-    <div class="max-w-6xl mx-auto flex justify-between">
-
-        <h1 class="text-2xl font-bold">
-            Gerenciar imagens
-        </h1>
-
-        <a href="index.php">
-            ← Painel
-        </a>
-
-    </div>
-
-</header>
+<body class="min-h-screen bg-gray-100">
 
 
-<main class="max-w-6xl mx-auto p-6">
+    <header class="bg-blue-900 px-6 py-5 text-white">
 
-    <div class="grid md:grid-cols-3 gap-6">
+        <div class="mx-auto flex max-w-7xl items-center justify-between">
 
-        <?php foreach ($imagens as $imagem): ?>
+            <h1 class="text-2xl font-bold">
+                Gerenciar Imagens
+            </h1>
 
-            <div class="bg-white rounded-xl shadow p-5">
+            <a
+                href="index.php"
+                class="rounded-lg bg-white px-4 py-2 font-semibold text-blue-900">
 
-                <h2 class="font-bold text-xl mb-4">
-                    <?= htmlspecialchars($imagem['nome']) ?>
-                </h2>
+                Painel
 
-                <img
-                    src="../img/<?= htmlspecialchars($imagem['arquivo']) ?>"
-                    class="w-full h-48 object-cover rounded-lg mb-5">
+            </a>
+
+        </div>
+
+    </header>
 
 
-                <form
-                    action="salvar_imagem.php"
-                    method="POST"
-                    enctype="multipart/form-data">
+    <main class="mx-auto max-w-7xl px-6 py-10">
 
-                    <input
-                        type="hidden"
-                        name="id"
-                        value="<?= $imagem['id'] ?>">
 
-                    <input
-                        type="file"
-                        name="imagem"
-                        accept="image/jpeg,image/png,image/webp"
-                        required
-                        class="w-full mb-4">
+        <h2 class="text-3xl font-bold text-blue-900">
+            Imagens do site
+        </h2>
 
-                    <button
-                        class="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800">
 
-                        Trocar imagem
+        <p class="mt-2 text-gray-600">
+            Escolha uma imagem para substituir.
+        </p>
 
-                    </button>
 
-                </form>
+        <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+
+            <?php foreach ($imagens as $imagem): ?>
+
+
+                <div class="overflow-hidden rounded-xl bg-white shadow">
+
+
+                    <div class="flex h-56 items-center justify-center bg-gray-100">
+
+                        <img
+                            src="../img/<?= rawurlencode($imagem) ?>?v=<?= filemtime($pastaImagens . "/" . $imagem) ?>"
+                            alt="<?= htmlspecialchars($imagem) ?>"
+                            class="h-full w-full object-cover">
+                    </div>
+
+
+                    <div class="p-5">
+
+
+                        <p class="mb-4 truncate font-semibold text-gray-700">
+
+                            <?= htmlspecialchars($imagem) ?>
+
+                        </p>
+
+
+                        <form
+                            action="salvar_imagens.php"
+                            method="POST"
+                            enctype="multipart/form-data">
+
+
+                            <input
+                                type="hidden"
+                                name="imagem_atual"
+                                value="<?= htmlspecialchars($imagem) ?>">
+
+
+                            <label
+                                class="mb-2 block text-sm font-semibold text-gray-700">
+
+                                Nova imagem
+
+                            </label>
+
+
+                            <input
+                                type="file"
+                                name="nova_imagem"
+                                accept="image/jpeg,image/png,image/gif,image/webp"
+                                required
+                                class="mb-4 block w-full text-sm text-gray-500">
+
+
+                            <button
+                                type="submit"
+                                class="w-full rounded-lg bg-blue-900 px-4 py-2 font-semibold text-white hover:bg-blue-800">
+
+                                Substituir imagem
+
+                            </button>
+
+
+                        </form>
+
+
+                    </div>
+
+
+                </div>
+
+
+            <?php endforeach; ?>
+
+
+        </div>
+
+
+        <?php if (empty($imagens)): ?>
+
+            <div class="mt-8 rounded-xl bg-white p-8 text-center shadow">
+
+                <p class="text-gray-500">
+                    Nenhuma imagem encontrada na pasta src/img.
+                </p>
 
             </div>
 
-        <?php endforeach; ?>
+        <?php endif; ?>
 
-    </div>
 
-</main>
+    </main>
 
 </body>
+
 </html>

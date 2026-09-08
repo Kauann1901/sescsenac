@@ -1,3 +1,95 @@
+<?php
+
+require_once __DIR__ . "/src/database/conexao.php";
+
+/*
+|--------------------------------------------------------------------------
+| IMAGENS
+|--------------------------------------------------------------------------
+*/
+
+function buscarImagem($pdo, $localizacao, $padrao)
+{
+    try {
+
+        $stmt = $pdo->prepare("
+            SELECT arquivo
+            FROM imagens
+            WHERE localizacao = :localizacao
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            ":localizacao" => $localizacao
+        ]);
+
+        $arquivo = $stmt->fetchColumn();
+
+        if ($arquivo) {
+
+            $caminho = __DIR__ . "/uploads/imagens/" . $arquivo;
+
+            if (file_exists($caminho)) {
+                return "uploads/imagens/" . $arquivo;
+            }
+        }
+
+    } catch (PDOException $e) {
+
+        // Se a tabela ainda não existir, usa a imagem original.
+    }
+
+    return $padrao;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| IMAGENS DO SITE
+|--------------------------------------------------------------------------
+*/
+
+$logo = buscarImagem(
+    $pdo,
+    "logo",
+    "src/img/imagem6.png"
+);
+
+$imagem2 = buscarImagem(
+    $pdo,
+    "imagem2",
+    "img/imagem2.jpg"
+);
+
+$imagem3 = buscarImagem(
+    $pdo,
+    "imagem3",
+    "img/imagem3.jpg"
+);
+
+$imagem4 = buscarImagem(
+    $pdo,
+    "imagem4",
+    "img/imagem4.jpg"
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| DEPOIMENTOS APROVADOS
+|--------------------------------------------------------------------------
+*/
+
+$stmtDepoimentos = $pdo->query("
+    SELECT id, nome, depoimento, avaliacao, data_criacao
+    FROM depoimentos
+    WHERE status = 'aprovado'
+    ORDER BY data_criacao DESC
+");
+
+$depoimentos = $stmtDepoimentos->fetchAll(PDO::FETCH_ASSOC);
+
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -5,7 +97,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./css/output.css" rel="stylesheet">
+    <link href="./src/css/output.css" rel="stylesheet">
     <title>Ensino Médio Sesc Senac</title>
 </head>
 
@@ -27,7 +119,9 @@
                 </div>
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start ">
                     <a href="#inicio" class="flex shrink-0 items-center">
-                        <img src="./img/LogoColorida.png" alt="Logo Sesc Senac" class="h-14 w-auto">
+                        <img
+    src="./img/imagem6.png?v=<?= filemtime(__DIR__ . "/img/imagem6.png") ?>"
+    alt="Logo">
                     </a>
                     <div class="hidden sm:ml-6 sm:block">
                         <div class="flex space-x-2 mt-2">
@@ -97,15 +191,23 @@
     <section id="inicio" class="relative w-full overflow-hidden group">
         <div id="slider" class="flex transition-transform duration-700 ease-in-out h-72 md:h-[500px]">
             <div class="relative min-w-full h-full">
-                <img src="./img/imagem2.jpg" class="w-full h-full object-cover" alt="Ensino Médio">
+                <img
+    src="./img/imagem2.jpg?v=<?= filemtime(__DIR__ . "/img/imagem2.jpg") ?>"
+    alt="Imagem 2">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative min-w-full h-full">
-                <img src="./img/imagem3.jpg" class="w-full h-full object-cover" alt="Alunos">
+                <img
+    src="./img/imagem3.jpg?v=<?= filemtime(__DIR__ . "/img/imagem3.jpg") ?>"
+    class="w-full h-full object-cover"
+    alt="Alunos">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative min-w-full h-full">
-                <img src="./img/imagem4.jpg" class="w-full h-full object-cover" alt="Educação">
+                <img
+    src="./img/imagem4.jpg?v=<?= filemtime(__DIR__ . "/img/imagem4.jpg") ?>"
+    class="w-full h-full object-cover"
+    alt="Educação">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
         </div>
@@ -382,9 +484,9 @@
     <section id="feiras" class="bg-white py-20">
         <div class="mx-auto max-w-6xl px-6">
             <div class="text-center">
-                <spanclass="text-sm font-bold uppercase tracking-wider text-blue-700">Eventos</spanclass=>
-                    <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">Feiras e eventos</h2>
-                    <p class="mx-auto mt-4 max-w-2xl text-gray-600">Momentos de aprendizagem, criatividade e compartilhamentodos trabalhos desenvolvidos pelos estudantes.</p>
+                <span class="text-sm font-bold uppercase tracking-wider text-blue-700">Eventos</span>
+                <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">Feiras e eventos</h2>
+                <p class="mx-auto mt-4 max-w-2xl text-gray-600">Momentos de aprendizagem, criatividade e compartilhamentodos trabalhos desenvolvidos pelos estudantes.</p>
             </div>
             <div class="mt-10 grid gap-6 md:grid-cols-3">
                 <div class="group rounded-2xl border border-gray-100 bg-white p-7 shadow-md hover:-translate-y-2 hover:shadow-xl transition">
@@ -461,11 +563,80 @@
             </p>
         </div>
     </section>
+    <section id="depoimentos" class="bg-white py-20">
+
+        <div class="mx-auto max-w-6xl px-6">
+
+            <div class="text-center">
+
+                <span class="text-sm font-bold uppercase tracking-wider text-blue-700">
+                    O que dizem sobre nós
+                </span>
+
+                <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">
+                    Depoimentos
+                </h2>
+
+                <p class="mt-4 text-gray-600">
+                    Veja a opinião de quem faz parte da nossa comunidade escolar.
+                </p>
+
+            </div>
+
+
+            <?php if (empty($depoimentos)): ?>
+
+                <div class="mt-10 rounded-2xl bg-gray-50 p-8 text-center">
+
+                    <p class="text-gray-500">
+                        Ainda não há depoimentos aprovados.
+                    </p>
+
+                </div>
+
+            <?php else: ?>
+
+                <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+                    <?php foreach ($depoimentos as $depoimento): ?>
+
+                        <div class="rounded-2xl bg-gray-50 p-6 shadow-sm">
+
+                            <div class="flex items-center justify-between">
+
+                                <h3 class="font-bold text-blue-950">
+                                    <?= htmlspecialchars($depoimento["nome"]) ?>
+                                </h3>
+
+                                <span class="text-yellow-500">
+                                    <?= str_repeat("★", (int)$depoimento["avaliacao"]) ?>
+                                </span>
+
+                            </div>
+
+
+                            <p class="mt-4 leading-relaxed text-gray-600">
+
+                                <?= nl2br(htmlspecialchars($depoimento["depoimento"])) ?>
+
+                            </p>
+
+                        </div>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+            <?php endif; ?>
+
+        </div>
+
+    </section>
     <section class="flex justify-center items-center">
         <form
-            class="flex flex-col items-start justify-center w-1/2 h-[500px]
-            shadow-2xl border border-[rgba(0,0,0,0.05)] rounded-lg m-5 p-5 gap-3"
-            method="POST">
+            action="src/admin/salvar_comentarios.php"
+            method="POST"
+            class="flex flex-col items-start justify-center w-1/2 h-[500px] shadow-2xl border border-[rgba(0,0,0,0.05)] rounded-lg m-5 p-5 gap-3">
 
 
             <h1>Formulario Depoimento</h1>
@@ -473,24 +644,24 @@
 
             <label for="nome">Nome:</label>
             <input
-                id="nome"
-                name="nome"
                 type="text"
+                name="nome"
+                placeholder="Seu nome"
                 required
-                class="w-full rounded-lg border border-gray-300 px-4 py-3 shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg">
+                class="w-full rounded-lg border border-gray-300 px-4 py-3">
 
 
             <label for="depoimento">Depoimento:</label>
             <textarea
-                id="depoimento"
                 name="depoimento"
+                placeholder="Escreva seu comentário..."
                 required
-                class="w-full h-32 rounded-lg border border-gray-300 px-4 py-3 resize-none shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg"></textarea>
+                class="w-full rounded-lg border border-gray-300 px-4 py-3"></textarea>
 
 
-            <label for="avaliacao">Avaliação:</label>
+            <label for=" avaliacao">Avaliação:</label>
             <select
-                id="avaliacao"
+                name="avaliacao"
                 name="avaliacao"
                 required
                 class="w-full rounded-lg border border-gray-300 px-4 py-3 shadow-md border border-[rgba(0,0,0,0.05)] rounded-lg">
@@ -514,7 +685,9 @@
         <div class="mx-auto max-w-7xl px-6 py-12">
             <div class="grid gap-8 md:grid-cols-3">
                 <div>
-                    <img src="./img/LogoColorida.png" alt="Logo" class="h-40 w-auto">
+                    <img
+    src="./img/imagem6.png?v=<?= filemtime(__DIR__ . "/img/imagem6.png") ?>"
+    alt="Logo">
                     <p class="mt-4 max-w-sm text-sm leading-relaxed text-blue-500">
                         Ensino Médio Sesc Senac:
                         conhecimento, criatividade e oportunidades
@@ -547,16 +720,16 @@
                 </div>
             </div>
             <div>
-                <a href="./login.php" class="hover:text-black transition"> Área do Administrador</a>
+                <a href="./src/login.php" class="hover:text-black transition"> Área do Administrador</a>
             </div>
-            </div>
-            <div class="mt-10 border-t border-white/10 pt-6 text-center text-sm text-blue-500">
-                © 2026 Ensino Médio Sesc Senac. Todos os direitos reservados.
-            </div>
+        </div>
+        <div class="mt-10 border-t border-white/10 pt-6 text-center text-sm text-blue-500">
+            © 2026 Ensino Médio Sesc Senac. Todos os direitos reservados.
+        </div>
         </div>
     </footer>
 
-    <script src="./js/index.js"></script>
+    <script src="./src/js/index.js"></script>
 
 </body>
 
