@@ -2,11 +2,6 @@
 
 session_start();
 
-
-// =====================================================
-// VERIFICAR LOGIN
-// =====================================================
-
 if (
     !isset($_SESSION["usuario_id"]) ||
     !isset($_SESSION["logado"]) ||
@@ -16,102 +11,104 @@ if (
     exit;
 }
 
-
-// =====================================================
-// VERIFICAR MÉTODO
-// =====================================================
-
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: imagens.php");
     exit;
 }
 
 
-// =====================================================
-// PEGAR IMAGEM ATUAL
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| IMAGEM ATUAL
+|--------------------------------------------------------------------------
+*/
 
 $imagemAtual = $_POST["imagem_atual"] ?? "";
 
 if ($imagemAtual === "") {
-
     header(
         "Location: imagens.php?erro=" .
         urlencode("Imagem atual não informada.")
     );
-
     exit;
 }
 
 
-// Segurança
+/*
+|--------------------------------------------------------------------------
+| SEGURANÇA DO NOME
+|--------------------------------------------------------------------------
+*/
+
 $imagemAtual = basename($imagemAtual);
 
 
-// =====================================================
-// VERIFICAR ARQUIVO
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| ARQUIVO ENVIADO
+|--------------------------------------------------------------------------
+*/
 
-if (
-    !isset($_FILES["nova_imagem"]) ||
-    !is_array($_FILES["nova_imagem"])
-) {
-
+if (!isset($_FILES["nova_imagem"])) {
     header(
         "Location: imagens.php?erro=" .
         urlencode("Nenhum arquivo foi enviado.")
     );
-
     exit;
 }
-
 
 $arquivo = $_FILES["nova_imagem"];
 
 
-// =====================================================
-// VERIFICAR ERRO DO UPLOAD
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| ERRO DO UPLOAD
+|--------------------------------------------------------------------------
+*/
 
 if ($arquivo["error"] !== UPLOAD_ERR_OK) {
 
     switch ($arquivo["error"]) {
 
         case UPLOAD_ERR_INI_SIZE:
-            $erro = "O arquivo ultrapassa o limite permitido pelo PHP.";
+            $mensagem = "A imagem ultrapassa o tamanho permitido pelo PHP.";
             break;
 
         case UPLOAD_ERR_FORM_SIZE:
-            $erro = "O arquivo é muito grande.";
+            $mensagem = "A imagem é muito grande.";
             break;
 
         case UPLOAD_ERR_PARTIAL:
-            $erro = "O upload foi enviado apenas parcialmente.";
+            $mensagem = "O upload da imagem foi interrompido.";
             break;
 
         case UPLOAD_ERR_NO_FILE:
-            $erro = "Nenhum arquivo foi selecionado.";
+            $mensagem = "Nenhum arquivo foi selecionado.";
             break;
 
         default:
-            $erro = "Erro desconhecido durante o upload.";
+            $mensagem = "Ocorreu um erro durante o envio.";
             break;
     }
 
     header(
         "Location: imagens.php?erro=" .
-        urlencode($erro)
+        urlencode($mensagem)
     );
 
     exit;
 }
 
 
-// =====================================================
-// VERIFICAR TAMANHO
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| TAMANHO MÁXIMO
+|--------------------------------------------------------------------------
+*/
 
-if ($arquivo["size"] > 5 * 1024 * 1024) {
+$limite = 5 * 1024 * 1024;
+
+if ($arquivo["size"] > $limite) {
 
     header(
         "Location: imagens.php?erro=" .
@@ -122,67 +119,76 @@ if ($arquivo["size"] > 5 * 1024 * 1024) {
 }
 
 
-// =====================================================
-// VERIFICAR SE É IMAGEM
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| FORMATOS PERMITIDOS
+|--------------------------------------------------------------------------
+*/
 
-$informacoes = getimagesize($arquivo["tmp_name"]);
-
-if ($informacoes === false) {
-
-    header(
-        "Location: imagens.php?erro=" .
-        urlencode("O arquivo selecionado não é uma imagem.")
-    );
-
-    exit;
-}
-
-
-// =====================================================
-// TIPOS PERMITIDOS
-// =====================================================
-
-$tiposPermitidos = [
-    "image/jpeg",
-    "image/png",
-    "image/gif",
-    "image/webp"
+$extensoesPermitidas = [
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "webp"
 ];
 
+$extensao = strtolower(
+    pathinfo($arquivo["name"], PATHINFO_EXTENSION)
+);
 
-if (!in_array($informacoes["mime"], $tiposPermitidos, true)) {
+if (!in_array($extensao, $extensoesPermitidas, true)) {
 
     header(
         "Location: imagens.php?erro=" .
-        urlencode("Tipo de imagem não permitido.")
+        urlencode("Formato de imagem não permitido.")
     );
 
     exit;
 }
 
 
-// =====================================================
-// PASTA DAS IMAGENS
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| VERIFICA SE É UMA IMAGEM
+|--------------------------------------------------------------------------
+*/
+
+if (getimagesize($arquivo["tmp_name"]) === false) {
+
+    header(
+        "Location: imagens.php?erro=" .
+        urlencode("O arquivo selecionado não é uma imagem válida.")
+    );
+
+    exit;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASTA src/img
+|--------------------------------------------------------------------------
+*/
 
 $pasta = __DIR__ . "/../img";
-
 
 if (!is_dir($pasta)) {
 
     header(
         "Location: imagens.php?erro=" .
-        urlencode("A pasta src/img não existe.")
+        urlencode("A pasta src/img não foi encontrada.")
     );
 
     exit;
 }
 
 
-// =====================================================
-// VERIFICAR PERMISSÃO DA PASTA
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| PERMISSÃO DE GRAVAÇÃO
+|--------------------------------------------------------------------------
+*/
 
 if (!is_writable($pasta)) {
 
@@ -195,16 +201,20 @@ if (!is_writable($pasta)) {
 }
 
 
-// =====================================================
-// DESTINO
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| DESTINO
+|--------------------------------------------------------------------------
+*/
 
 $destino = $pasta . "/" . $imagemAtual;
 
 
-// =====================================================
-// SALVAR NOVA IMAGEM
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| SUBSTITUI A IMAGEM
+|--------------------------------------------------------------------------
+*/
 
 if (!move_uploaded_file(
     $arquivo["tmp_name"],
@@ -220,17 +230,13 @@ if (!move_uploaded_file(
 }
 
 
-// =====================================================
-// LIMPAR CACHE DO PHP
-// =====================================================
+/*
+|--------------------------------------------------------------------------
+| FINAL
+|--------------------------------------------------------------------------
+*/
 
 clearstatcache(true, $destino);
 
-
-// =====================================================
-// VOLTAR
-// =====================================================
-
 header("Location: imagens.php?sucesso=1");
-
 exit;

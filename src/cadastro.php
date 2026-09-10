@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $stmt = $pdo->prepare("
                 INSERT INTO usuarios
-                (nome, email, senha, tipo)
+                (nome, email, senha, criado_em)
                 VALUES (?, ?, ?, 'usuario')
             ");
 

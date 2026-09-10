@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 if (
@@ -7,68 +6,54 @@ if (
     !isset($_SESSION["logado"]) ||
     $_SESSION["logado"] !== true
 ) {
-
     header("Location: ../login.php");
     exit;
 }
 
-
 $pastaImagens = __DIR__ . "/../img";
 
+$arquivos = [];
+
+if (is_dir($pastaImagens)) {
+    $arquivos = scandir($pastaImagens);
+}
+
+$extensoesPermitidas = ["jpg", "jpeg", "png", "gif", "webp"];
 
 $imagens = [];
 
+foreach ($arquivos as $arquivo) {
 
-if (is_dir($pastaImagens)) {
+    if ($arquivo === "." || $arquivo === "..") {
+        continue;
+    }
 
-    $arquivos = scandir($pastaImagens);
+    $extensao = strtolower(
+        pathinfo($arquivo, PATHINFO_EXTENSION)
+    );
 
-    foreach ($arquivos as $arquivo) {
-
-        $extensao = strtolower(
-            pathinfo($arquivo, PATHINFO_EXTENSION)
-        );
-
-        if (
-            in_array(
-                $extensao,
-                ["jpg", "jpeg", "png", "gif", "webp"]
-            )
-        ) {
-
-            $imagens[] = $arquivo;
-        }
+    if (in_array($extensao, $extensoesPermitidas, true)) {
+        $imagens[] = $arquivo;
     }
 }
-
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0">
+    <link href="../css/output.css" rel="stylesheet">
 
     <title>Gerenciar Imagens</title>
-
-    <link
-        rel="stylesheet"
-        href="../css/output.css">
-
 </head>
 
+<body class="bg-gray-100 min-h-screen">
 
-<body class="min-h-screen bg-gray-100">
-
-
-    <header class="bg-blue-900 px-6 py-5 text-white">
-
-        <div class="mx-auto flex max-w-7xl items-center justify-between">
+    <header class="bg-blue-900 text-white p-5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
 
             <h1 class="text-2xl font-bold">
                 Gerenciar Imagens
@@ -76,125 +61,109 @@ if (is_dir($pastaImagens)) {
 
             <a
                 href="index.php"
-                class="rounded-lg bg-white px-4 py-2 font-semibold text-blue-900">
-
-                Painel
-
+                class="bg-white text-blue-900 px-4 py-2 rounded-lg hover:bg-gray-100"
+            >
+                Voltar
             </a>
 
         </div>
-
     </header>
 
+    <main class="max-w-7xl mx-auto px-6 py-10">
 
-    <main class="mx-auto max-w-7xl px-6 py-10">
+        <?php if (isset($_GET["sucesso"])): ?>
 
+            <div class="mb-6 rounded-lg bg-green-100 border border-green-300 p-4 text-green-800">
+                Imagem substituída com sucesso!
+            </div>
 
-        <h2 class="text-3xl font-bold text-blue-900">
-            Imagens do site
-        </h2>
+        <?php endif; ?>
 
+        <?php if (isset($_GET["erro"])): ?>
 
-        <p class="mt-2 text-gray-600">
-            Escolha uma imagem para substituir.
-        </p>
-
-
-        <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
-
-            <?php foreach ($imagens as $imagem): ?>
-
-
-                <div class="overflow-hidden rounded-xl bg-white shadow">
-
-
-                    <div class="flex h-56 items-center justify-center bg-gray-100">
-
-                        <img
-                            src="../img/<?= rawurlencode($imagem) ?>?v=<?= filemtime($pastaImagens . "/" . $imagem) ?>"
-                            alt="<?= htmlspecialchars($imagem) ?>"
-                            class="h-full w-full object-cover">
-                    </div>
-
-
-                    <div class="p-5">
-
-
-                        <p class="mb-4 truncate font-semibold text-gray-700">
-
-                            <?= htmlspecialchars($imagem) ?>
-
-                        </p>
-
-
-                        <form
-                            action="salvar_imagens.php"
-                            method="POST"
-                            enctype="multipart/form-data">
-
-
-                            <input
-                                type="hidden"
-                                name="imagem_atual"
-                                value="<?= htmlspecialchars($imagem) ?>">
-
-
-                            <label
-                                class="mb-2 block text-sm font-semibold text-gray-700">
-
-                                Nova imagem
-
-                            </label>
-
-
-                            <input
-                                type="file"
-                                name="nova_imagem"
-                                accept="image/jpeg,image/png,image/gif,image/webp"
-                                required
-                                class="mb-4 block w-full text-sm text-gray-500">
-
-
-                            <button
-                                type="submit"
-                                class="w-full rounded-lg bg-blue-900 px-4 py-2 font-semibold text-white hover:bg-blue-800">
-
-                                Substituir imagem
-
-                            </button>
-
-
-                        </form>
-
-
-                    </div>
-
-
-                </div>
-
-
-            <?php endforeach; ?>
-
-
-        </div>
-
-
-        <?php if (empty($imagens)): ?>
-
-            <div class="mt-8 rounded-xl bg-white p-8 text-center shadow">
-
-                <p class="text-gray-500">
-                    Nenhuma imagem encontrada na pasta src/img.
-                </p>
-
+            <div class="mb-6 rounded-lg bg-red-100 border border-red-300 p-4 text-red-800">
+                <?= htmlspecialchars($_GET["erro"]) ?>
             </div>
 
         <?php endif; ?>
 
 
+        <?php if (empty($imagens)): ?>
+
+            <div class="bg-white rounded-xl shadow p-8 text-center">
+                <p class="text-gray-600">
+                    Nenhuma imagem encontrada na pasta <strong>src/img</strong>.
+                </p>
+            </div>
+
+        <?php else: ?>
+
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+
+                <?php foreach ($imagens as $imagem): ?>
+
+                    <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+
+                        <div class="h-56 bg-gray-100 flex items-center justify-center">
+
+                            <img
+                                src="../img/<?= htmlspecialchars($imagem) ?>?v=<?= filemtime($pastaImagens . "/" . $imagem) ?>"
+                                alt="<?= htmlspecialchars($imagem) ?>"
+                                class="w-full h-full object-cover"
+                            >
+
+                        </div>
+
+                        <div class="p-5">
+
+                            <h2 class="font-bold text-lg text-blue-950 mb-4 break-all">
+                                <?= htmlspecialchars($imagem) ?>
+                            </h2>
+
+                            <form
+                                action="salvar_imagens.php"
+                                method="POST"
+                                enctype="multipart/form-data"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="imagem_atual"
+                                    value="<?= htmlspecialchars($imagem) ?>"
+                                >
+
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Escolher nova imagem
+                                </label>
+
+                                <input
+                                    type="file"
+                                    name="nova_imagem"
+                                    accept="image/jpeg,image/png,image/gif,image/webp"
+                                    required
+                                    class="w-full text-sm mb-4"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="w-full rounded-lg bg-blue-900 px-4 py-3 text-white font-semibold hover:bg-blue-700 transition"
+                                >
+                                    Substituir imagem
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+
+        <?php endif; ?>
+
     </main>
 
 </body>
-
 </html>
