@@ -2,92 +2,24 @@
 
 require_once __DIR__ . "/src/database/conexao.php";
 
-/*
-|--------------------------------------------------------------------------
-| IMAGENS
-|--------------------------------------------------------------------------
-*/
-
-function buscarImagem($pdo, $localizacao, $padrao)
-{
-    try {
-
-        $stmt = $pdo->prepare("
-            SELECT arquivo
-            FROM imagens
-            WHERE localizacao = :localizacao
-            LIMIT 1
-        ");
-
-        $stmt->execute([
-            ":localizacao" => $localizacao
-        ]);
-
-        $arquivo = $stmt->fetchColumn();
-
-        if ($arquivo) {
-
-            $caminho = __DIR__ . "/uploads/imagens/" . $arquivo;
-
-            if (file_exists($caminho)) {
-                return "uploads/imagens/" . $arquivo;
-            }
-        }
-
-    } catch (PDOException $e) {
-
-        // Se a tabela ainda não existir, usa a imagem original.
-    }
-
-    return $padrao;
-}
-
-
-/*
-|--------------------------------------------------------------------------
-| IMAGENS DO SITE
-|--------------------------------------------------------------------------
-*/
-
-$logo = buscarImagem(
-    $pdo,
-    "logo",
-    "src/img/imagem6.png"
-);
-
-$imagem2 = buscarImagem(
-    $pdo,
-    "imagem2",
-    "img/imagem2.jpg"
-);
-
-$imagem3 = buscarImagem(
-    $pdo,
-    "imagem3",
-    "img/imagem3.jpg"
-);
-
-$imagem4 = buscarImagem(
-    $pdo,
-    "imagem4",
-    "img/imagem4.jpg"
-);
-
-
-/*
-|--------------------------------------------------------------------------
-| DEPOIMENTOS APROVADOS
-|--------------------------------------------------------------------------
-*/
-
-$stmtDepoimentos = $pdo->query("
-    SELECT id, nome, depoimento, avaliacao, data_criacao
+$stmt = $pdo->query("
+    SELECT nome, depoimento, avaliacao, data_criacao
     FROM depoimentos
     WHERE status = 'aprovado'
     ORDER BY data_criacao DESC
 ");
 
-$depoimentos = $stmtDepoimentos->fetchAll(PDO::FETCH_ASSOC);
+$depoimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$logo = "./img/imagem6.png";
+
+$imagem2 = "./img/imagem2.jpg";
+
+$imagem3 = "./img/imagem3.jpg";
+
+$imagem4 = "./img/imagem4.jpg";
+
+$imagem5 = "./img/imagem5.jpg";
 
 ?>
 
@@ -191,23 +123,15 @@ $depoimentos = $stmtDepoimentos->fetchAll(PDO::FETCH_ASSOC);
     <section id="inicio" class="relative w-full overflow-hidden group">
         <div id="slider" class="flex transition-transform duration-700 ease-in-out h-72 md:h-[500px]">
             <div class="relative min-w-full h-full">
-                <img
-    src="./img/imagem2.jpg?v=<?= filemtime(__DIR__ . "/img/imagem2.jpg") ?>"
-    alt="Imagem 2">
+                <img src="./img/imagem2.jpg?v=<?= filemtime(__DIR__ . "/img/imagem2.jpg") ?>" alt="Imagem 2">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative min-w-full h-full">
-                <img
-    src="./img/imagem3.jpg?v=<?= filemtime(__DIR__ . "/img/imagem3.jpg") ?>"
-    class="w-full h-full object-cover"
-    alt="Alunos">
+                <img src="./img/imagem3.jpg?v=<?= filemtime(__DIR__ . "/img/imagem3.jpg") ?>" class="w-full h-full object-cover" alt="Alunos">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative min-w-full h-full">
-                <img
-    src="./img/imagem4.jpg?v=<?= filemtime(__DIR__ . "/img/imagem4.jpg") ?>"
-    class="w-full h-full object-cover"
-    alt="Educação">
+                <img src="./img/imagem4.jpg?v=<?= filemtime(__DIR__ . "/img/imagem4.jpg") ?>" class="w-full h-full object-cover" alt="Educação">
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
         </div>
