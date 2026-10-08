@@ -445,19 +445,10 @@ function versaoImagem($arquivo)
 
 
     <section id="atividades" class="bg-white py-20">
-
         <div class="mx-auto max-w-6xl px-6">
-
             <div class="text-center">
-
-                <span class="text-sm font-bold uppercase tracking-wider text-blue-700">
-                    Experiências
-                </span>
-
-                <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">
-                    Atividades Extracurriculares
-                </h2>
-
+                <span class="text-sm font-bold uppercase tracking-wider text-blue-700"> Experiências </span>
+                <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl"> Atividades Extracurriculares </h2>
                 <p class="mx-auto mt-4 max-w-2xl text-gray-600">
                     Atividades que ampliam as experiências dos estudantes
                     para além da sala de aula.
@@ -589,63 +580,37 @@ function versaoImagem($arquivo)
                     <p class="mt-4 text-sm font-semibold text-blue-700">
                         2° e 3° anos do Ensino Médio
                     </p>
-
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
 
 
     <section id="projetos" class="bg-blue-50 py-20">
-
         <div class="mx-auto max-w-6xl px-6">
-
             <div class="text-center">
-
                 <span class="text-sm font-bold uppercase tracking-wider text-blue-700">
                     Aprender fazendo
                 </span>
-
                 <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl">
                     Projetos
                 </h2>
-
             </div>
-
-
-            <div class="mt-10 grid gap-6 md:grid-cols-2">
-
-                <div class="rounded-2xl bg-white p-8 shadow-sm">
-
+            <div class="mt-10 flex justify-center">
+                <div class="w-full max-w-2xl rounded-2xl bg-white p-8 shadow-sm">
                     <div class="text-4xl">💻</div>
-
-                    <h3 class="mt-5 text-2xl font-bold text-blue-950">
-                        Projeto Integrador
-                    </h3>
-
+                    <h3 class="mt-5 text-2xl font-bold text-blue-950"> Projeto Integrador </h3>
                     <p class="mt-3 leading-relaxed text-gray-600">
-
                         Projeto do curso Técnico em Informática que proporciona
                         aos alunos a oportunidade de colocar em prática os
                         conhecimentos adquiridos ao longo da formação, por meio
                         do desenvolvimento de projetos.
-
                     </p>
-
-                    <div class="mt-6 rounded-xl bg-blue-50 p-4 text-sm font-semibold text-blue-800">
-                        Técnico em Informática
-                    </div>
-
+                    <div class="mt-6 rounded-xl bg-blue-50 p-4 text-sm font-semibold text-blue-800"> Técnico em Informática </div>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
 
