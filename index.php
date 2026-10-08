@@ -916,9 +916,149 @@ function versaoImagem($arquivo)
             </form>
         </div>
     </div>
-
-
-
+    <section id="professores" class="py-16 px-6 bg-gray-50">
+    <div class="max-w-7xl mx-auto">
+        <!-- Título da seção -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-blue-900">
+                Nossa equipe de professores
+            </h2>
+            <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                Conheça os profissionais que fazem parte da nossa instituição
+                e suas experiências acadêmicas e profissionais.
+            </p>
+        </div>
+ 
+        <!-- Cards dos professores -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Professor 1 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden
+                        hover:shadow-2xl transition duration-300">
+                <!-- Foto -->
+                <div class="h-64 bg-gray-200">
+                    <img
+                        src="img/icone-de"
+                        alt="Professor João Silva"
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+                <!-- Informações -->
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800">
+                        João Silva
+                    </h3>
+                    <p class="text-blue-700 font-semibold mt-1">
+                        Professor de Matemática
+                    </p>
+                    <div class="mt-5 space-y-3 text-gray-600">
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Formação:
+                            </span>
+                            Licenciatura em Matemática
+                        </p>
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Pós-graduação:
+                            </span>
+                            Educação Matemática
+                        </p>
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Experiência:
+                            </span>
+                            10 anos na área da educação
+                        </p>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Professor 2 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden
+                        hover:shadow-2xl transition duration-300">
+                <!-- Foto -->
+                <div class="h-64 bg-gray-200">
+                    <img
+                        src="img/professora2.jpg"
+                        alt="Professora Maria Souza"
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+                <!-- Informações -->
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800">
+                        Maria Souza
+                    </h3>
+                    <p class="text-blue-700 font-semibold mt-1">
+                        Professora de História
+                    </p>
+                    <div class="mt-5 space-y-3 text-gray-600">
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Formação:
+                            </span>
+                            Licenciatura em História
+                        </p>
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Pós-graduação:
+                            </span>
+                            História e Cultura
+                        </p>
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Experiência:
+                            </span>
+                            8 anos na área da educação
+                        </p>
+                    </div>
+                </div>
+            </div>
+ 
+            <!-- Professor 3 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden
+                        hover:shadow-2xl transition duration-300">
+                <!-- Foto -->
+                <div class="h-64 bg-gray-200">
+                    <img
+                        src="img/professor3.jpg"
+                        alt="Professor Carlos Oliveira"
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+                <!-- Informações -->
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-gray-800">
+                        Carlos Oliveira
+                    </h3>
+                    <p class="text-blue-700 font-semibold mt-1">
+                        Professor de Tecnologia
+                    </p>
+                    <div class="mt-5 space-y-3 text-gray-600">
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Formação:
+                            </span>
+                            Engenharia de Software
+                        </p>
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Especialização:
+                            </span>
+                            Tecnologias Educacionais
+                        </p>
+                        <p>
+                            <span class="font-semibold text-gray-800">
+                                Experiência:
+                            </span>
+                            6 anos na área
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
     <footer class="bg-blue-50 text-black">
 
         <div class="mx-auto max-w-7xl px-6 py-12">
