@@ -183,7 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <div class="mt-5 text-center">
 
             <a
-                href="index.php"
+                href="../index.php"
                 class="text-sm text-gray-500 hover:text-blue-900">
 
                 ← Voltar para o site
