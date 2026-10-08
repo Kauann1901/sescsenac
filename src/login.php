@@ -180,23 +180,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
         </form>
-
-
-        <p class="mt-6 text-center text-gray-600">
-
-            Ainda não possui uma conta?
-
-            <a
-                href="cadastro.php"
-                class="font-bold text-blue-900 hover:underline">
-
-                Cadastre-se
-
-            </a>
-
-        </p>
-
-
         <div class="mt-5 text-center">
 
             <a
