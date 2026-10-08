@@ -932,108 +932,55 @@ function versaoImagem($arquivo)
                         <p class="mt-4 leading-relaxed text-gray-600">
 
                             <?= nl2br(htmlspecialchars($depoimento["depoimento"])) ?>
-
                         </p>
-
                     </div>
-
                 <?php endforeach; ?>
-
             </div>
-
         <?php endif; ?>
-
     </div>
-
 </section>
-
-
-
-<section class="flex justify-center items-center bg-white">
-
-    <form
-        action="src/admin/salvar_comentarios.php"
-        method="POST"
-        class="flex flex-col items-start justify-center w-1/2 shadow-2xl border border-gray-100 rounded-lg m-5 p-5 gap-3"
-    >
-
-        <h1 class="text-2xl font-bold text-blue-950">
-            Formulário de Depoimento
-        </h1>
-
-
-        <label for="nome">
-            Nome:
-        </label>
-
-        <input
-            type="text"
-            name="nome"
-            placeholder="Seu nome"
-            required
-            class="w-full rounded-lg border border-gray-300 px-4 py-3"
-        >
-
-
-        <label for="depoimento">
-            Depoimento:
-        </label>
-
-        <textarea
-            name="depoimento"
-            placeholder="Escreva seu comentário..."
-            required
-            class="w-full rounded-lg border border-gray-300 px-4 py-3"
-        ></textarea>
-
-
-        <label for="avaliacao">
-            Avaliação:
-        </label>
-
-        <select
-            name="avaliacao"
-            required
-            class="w-full rounded-lg border border-gray-300 px-4 py-3"
-        >
-
-            <option value="">
-                Selecione uma avaliação
-            </option>
-
-            <option value="1">
-                ⭐ 1 estrela
-            </option>
-
-            <option value="2">
-                ⭐ 2 estrelas
-            </option>
-
-            <option value="3">
-                ⭐ 3 estrelas
-            </option>
-
-            <option value="4">
-                ⭐ 4 estrelas
-            </option>
-
-            <option value="5">
-                ⭐ 5 estrelas
-            </option>
-
-        </select>
-
-
-        <button
-            type="submit"
-            class="mt-3 w-1/3 self-center rounded-lg bg-[#00264B] px-4 py-3 text-white hover:bg-blue-700 shadow-md"
-        >
-            Enviar depoimento
-        </button>
-
-    </form>
-
+<section class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-6 text-center">
+        <h2 class="text-3xl font-bold text-blue-900 mb-4">  Compartilhe sua experiência </h2>
+        <p class="text-gray-600 mb-8"> Conte para nós como foi sua experiência no SESC-SENAC. </p>
+        <button type="button" id="abrirDepoimento" class="bg-blue-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-800 transition" > Deixar um depoimento </button>
+    </div>
 </section>
+<div id="modalDepoimento" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative" >
+        <button type="button" id="fecharDepoimento" class="text-gray-500 hover:text-gray-800 text-2xl leading-none ml-4" > &times; </button>
+        <h2 class="text-2xl font-bold text-blue-900 mb-2">
+            Deixe seu depoimento
+        </h2>
+        <p class="text-gray-500 mb-6">
+            Sua opinião é muito importante para nós.
+        </p>
+        <form action="src/admin/salvar_comentarios.php"  method="POST" class="space-y-4" >
+            <div>
+                <label for="nome"  class="block text-sm font-semibold text-gray-700 mb-1" > Nome </label>
+                <input type="text" id="nome" name="nome" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-900" placeholder="Digite seu nome">
+            </div>
+            <div>
+                <label for="avaliacao" class="block text-sm font-semibold text-gray-700 mb-1"> Avaliação </label>
+                <select id="avaliacao" name="avaliacao" required class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-900">
+                    <option value="">Selecione uma avaliação</option>
+                    <option value="5">⭐⭐⭐⭐⭐ - Excelente</option>
+                    <option value="4">⭐⭐⭐⭐ - Muito bom</option>
+                    <option value="3">⭐⭐⭐ - Bom</option>
+                    <option value="2">⭐⭐ - Regular</option>
+                    <option value="1">⭐ - Precisa melhorar</option>
+                </select>
+            </div>
+            <div>
+                <label for="depoimento" class="block text-sm font-semibold text-gray-700 mb-1"> Seu depoimento </label>
+                <textarea id="depoimento" name="depoimento" rows="5" required class="w-full border border-gray-300 rounded-lg px-4 py-3 resize-none focus:outline-none focus:ring-2 focus:ring-blue-900" placeholder="Escreva seu depoimento..."></textarea>
+            </div>
+            <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+                Enviar depoimento
+            </button>
+        </form>
+    </div>
+</div>
 
 
 
@@ -1146,6 +1093,29 @@ function versaoImagem($arquivo)
 
 
 <script src="./src/js/index.js"></script>
+
+ <script>
+        const abrirDepoimento = document.getElementById("abrirDepoimento");
+        const fecharDepoimento = document.getElementById("fecharDepoimento");
+        const modalDepoimento = document.getElementById("modalDepoimento");
+
+        abrirDepoimento.addEventListener("click", () => {
+            modalDepoimento.classList.remove("hidden");
+            modalDepoimento.classList.add("flex");
+        });
+
+        fecharDepoimento.addEventListener("click", () => {
+            modalDepoimento.classList.add("hidden");
+            modalDepoimento.classList.remove("flex");
+        });
+
+        modalDepoimento.addEventListener("click", (evento) => {
+            if (evento.target === modalDepoimento) {
+                modalDepoimento.classList.add("hidden");
+                modalDepoimento.classList.remove("flex");
+            }
+        });
+    </script>
 
 
 </body>
