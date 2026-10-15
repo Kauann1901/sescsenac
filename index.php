@@ -1,15 +1,20 @@
+
 <?php
 
 require_once __DIR__ . "/src/database/conexao.php";
 
-$stmt = $pdo->query("
+// Buscar depoimentos aprovados
+$stmtDepoimentos = $pdo->query("
     SELECT nome, depoimento, avaliacao, data_criacao
     FROM depoimentos
     WHERE status = 'aprovado'
     ORDER BY data_criacao DESC
 ");
 
-$stmt = $pdo->query("
+$depoimentos = $stmtDepoimentos->fetchAll(PDO::FETCH_ASSOC);
+
+// Buscar professores ativos
+$stmtProfessores = $pdo->query("
     SELECT id, nome, cargo, formacao, pos_graduacao,
            experiencia, foto
     FROM professores
@@ -17,12 +22,7 @@ $stmt = $pdo->query("
     ORDER BY ordem ASC, nome ASC
 ");
 
-$professores = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$depoimentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
+$professores = $stmtProfessores->fetchAll(PDO::FETCH_ASSOC);
 
 $pastaImagens = __DIR__ . "/src/img/";
 
@@ -31,8 +31,6 @@ $imagem2 = "./src/img/imagem2.jpg";
 $imagem3 = "./src/img/imagem3.jpg";
 $imagem4 = "./src/img/imagem4.jpg";
 $imagem5 = "./src/img/imagem5.jpg";
-
-
 
 function versaoImagem($arquivo)
 {
@@ -46,6 +44,7 @@ function versaoImagem($arquivo)
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -816,7 +815,78 @@ function versaoImagem($arquivo)
 
     </section>
 
+<section id="professores" class="py-16 px-6 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+            <!-- Título da seção -->
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-blue-900">
+                    Nossa equipe de professores
+                </h2>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                    Conheça os profissionais que fazem parte da nossa instituição
+                    e suas experiências acadêmicas e profissionais.
+                </p>
+            </div>
 
+            <
+<div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-2 lg:grid-cols-3">
+
+    <?php foreach ($professores as $professor): ?>
+
+        <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
+
+            <?php if (!empty($professor["foto"])): ?>
+                <img
+                    src="./<?= htmlspecialchars($professor["foto"], ENT_QUOTES, "UTF-8") ?>"
+                    alt="<?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>"
+                    class="h-64 w-full object-cover"
+                >
+            <?php else: ?>
+                <div class="flex h-64 items-center justify-center bg-blue-50 text-blue-900">
+                    Foto não cadastrada
+                </div>
+            <?php endif; ?>
+
+            <div class="p-6">
+
+                <h3 class="text-2xl font-bold text-blue-950">
+                    <?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>
+                </h3>
+
+                <p class="mt-1 font-semibold text-blue-700">
+                    <?= htmlspecialchars($professor["cargo"], ENT_QUOTES, "UTF-8") ?>
+                </p>
+
+                <div class="mt-5 space-y-1 text-gray-600">
+
+                    <p>
+                        <strong class="text-gray-900">Formação:</strong>
+                        <?= htmlspecialchars($professor["formacao"], ENT_QUOTES, "UTF-8") ?>
+                    </p>
+
+                    <?php if (!empty($professor["pos_graduacao"])): ?>
+                        <p>
+                            <strong class="text-gray-900">Pós-graduação:</strong>
+                            <?= htmlspecialchars($professor["pos_graduacao"], ENT_QUOTES, "UTF-8") ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <p>
+                        <strong class="text-gray-900">Experiência:</strong>
+                        <?= htmlspecialchars($professor["experiencia"], ENT_QUOTES, "UTF-8") ?>
+                    </p>
+
+                </div>
+
+            </div>
+        </article>
+
+    <?php endforeach; ?>
+
+</div>
+
+        </div>
+    </section>
     <section id="depoimentos" class="bg-white py-20">
 
         <div class="mx-auto max-w-6xl px-6">
@@ -926,78 +996,7 @@ function versaoImagem($arquivo)
             </form>
         </div>
     </div>
-    <section id="professores" class="py-16 px-6 bg-gray-50">
-        <div class="max-w-7xl mx-auto">
-            <!-- Título da seção -->
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-blue-900">
-                    Nossa equipe de professores
-                </h2>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
-                    Conheça os profissionais que fazem parte da nossa instituição
-                    e suas experiências acadêmicas e profissionais.
-                </p>
-            </div>
-
-            <
-<div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-2 lg:grid-cols-3">
-
-    <?php foreach ($professores as $professor): ?>
-
-        <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
-
-            <?php if (!empty($professor["foto"])): ?>
-                <img
-                    src="./<?= htmlspecialchars($professor["foto"], ENT_QUOTES, "UTF-8") ?>"
-                    alt="<?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>"
-                    class="h-64 w-full object-cover"
-                >
-            <?php else: ?>
-                <div class="flex h-64 items-center justify-center bg-blue-50 text-blue-900">
-                    Foto não cadastrada
-                </div>
-            <?php endif; ?>
-
-            <div class="p-6">
-
-                <h3 class="text-2xl font-bold text-blue-950">
-                    <?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>
-                </h3>
-
-                <p class="mt-1 font-semibold text-blue-700">
-                    <?= htmlspecialchars($professor["cargo"], ENT_QUOTES, "UTF-8") ?>
-                </p>
-
-                <div class="mt-5 space-y-1 text-gray-600">
-
-                    <p>
-                        <strong class="text-gray-900">Formação:</strong>
-                        <?= htmlspecialchars($professor["formacao"], ENT_QUOTES, "UTF-8") ?>
-                    </p>
-
-                    <?php if (!empty($professor["pos_graduacao"])): ?>
-                        <p>
-                            <strong class="text-gray-900">Pós-graduação:</strong>
-                            <?= htmlspecialchars($professor["pos_graduacao"], ENT_QUOTES, "UTF-8") ?>
-                        </p>
-                    <?php endif; ?>
-
-                    <p>
-                        <strong class="text-gray-900">Experiência:</strong>
-                        <?= htmlspecialchars($professor["experiencia"], ENT_QUOTES, "UTF-8") ?>
-                    </p>
-
-                </div>
-
-            </div>
-        </article>
-
-    <?php endforeach; ?>
-
-</div>
-
-        </div>
-    </section>
+    
     <footer class="bg-blue-50 text-black">
 
         <div class="mx-auto max-w-7xl px-6 py-12">
