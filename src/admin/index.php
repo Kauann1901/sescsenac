@@ -278,7 +278,7 @@ if (is_dir($pastaImagens)) {
     <div class="mt-8">
 
         <a
-            href="../index.php"
+            href="../../index.php"
             class="font-semibold text-blue-900 hover:underline">
 
             ← Voltar para o site
