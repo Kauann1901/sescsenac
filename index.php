@@ -445,7 +445,7 @@ function versaoImagem($arquivo)
 
 
     <section id="atividades" class="bg-white py-20">
-        <div class="mx-auto max-w-6xl px-6">
+        <div class="mx-auto w-full max-w-[1600px] px-6">
             <div class="text-center">
                 <span class="text-sm font-bold uppercase tracking-wider text-blue-700"> Experiências </span>
                 <h2 class="mt-3 text-3xl font-black text-blue-950 md:text-4xl"> Atividades Extracurriculares </h2>
@@ -457,7 +457,7 @@ function versaoImagem($arquivo)
             </div>
 
 
-            <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div class="mt-10 grid gap-6" style="grid-template-columns: repeat(5, minmax(0, 1fr));">
 
 
                 <div class="rounded-2xl border border-blue-100 bg-blue-50 p-7 shadow-sm">
