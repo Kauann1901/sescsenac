@@ -815,78 +815,87 @@ function versaoImagem($arquivo)
 
     </section>
 
+
 <section id="professores" class="py-16 px-6 bg-gray-50">
-        <div class="max-w-7xl mx-auto">
-            <!-- Título da seção -->
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold text-blue-900">
-                    Nossa equipe de professores
-                </h2>
-                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
-                    Conheça os profissionais que fazem parte da nossa instituição
-                    e suas experiências acadêmicas e profissionais.
-                </p>
-            </div>
+    <div class="max-w-7xl mx-auto">
 
-            <
-<div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 md:grid-cols-2 lg:grid-cols-3">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-blue-900">
+                Nossa equipe de professores
+            </h2>
+            <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                Conheça os profissionais que fazem parte da nossa instituição
+                e suas experiências acadêmicas e profissionais.
+            </p>
+        </div>
 
-    <?php foreach ($professores as $professor): ?>
+        <div class="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 
-        <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
+            <?php foreach ($professores as $professor): ?>
 
-            <?php if (!empty($professor["foto"])): ?>
-                <img
-                    src="./<?= htmlspecialchars($professor["foto"], ENT_QUOTES, "UTF-8") ?>"
-                    alt="<?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>"
-                    class="h-64 w-full object-cover"
-                >
-            <?php else: ?>
-                <div class="flex h-64 items-center justify-center bg-blue-50 text-blue-900">
-                    Foto não cadastrada
-                </div>
-            <?php endif; ?>
+                <article class="overflow-hidden rounded-2xl bg-white shadow-lg">
 
-            <div class="p-6">
+                    <?php if (!empty($professor["foto"])): ?>
 
-                <h3 class="text-2xl font-bold text-blue-950">
-                    <?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>
-                </h3>
+                        <img
+                            src="/sescsenac/src/<?= htmlspecialchars(ltrim($professor["foto"], "/"), ENT_QUOTES, "UTF-8") ?>"
+                            alt="<?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>"
+                            class="h-64 w-full object-cover"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
 
-                <p class="mt-1 font-semibold text-blue-700">
-                    <?= htmlspecialchars($professor["cargo"], ENT_QUOTES, "UTF-8") ?>
-                </p>
+                        <div class="hidden h-64 items-center justify-center bg-blue-50 text-blue-900">
+                            Não foi possível carregar a foto.
+                        </div>
 
-                <div class="mt-5 space-y-1 text-gray-600">
+                    <?php else: ?>
 
-                    <p>
-                        <strong class="text-gray-900">Formação:</strong>
-                        <?= htmlspecialchars($professor["formacao"], ENT_QUOTES, "UTF-8") ?>
-                    </p>
+                        <div class="flex h-64 items-center justify-center bg-blue-50 text-blue-900">
+                            Foto não cadastrada
+                        </div>
 
-                    <?php if (!empty($professor["pos_graduacao"])): ?>
-                        <p>
-                            <strong class="text-gray-900">Pós-graduação:</strong>
-                            <?= htmlspecialchars($professor["pos_graduacao"], ENT_QUOTES, "UTF-8") ?>
-                        </p>
                     <?php endif; ?>
 
-                    <p>
-                        <strong class="text-gray-900">Experiência:</strong>
-                        <?= htmlspecialchars($professor["experiencia"], ENT_QUOTES, "UTF-8") ?>
-                    </p>
+                    <div class="p-6">
 
-                </div>
+                        <h3 class="text-2xl font-bold text-blue-950">
+                            <?= htmlspecialchars($professor["nome"], ENT_QUOTES, "UTF-8") ?>
+                        </h3>
 
-            </div>
-        </article>
+                        <p class="mt-1 font-semibold text-blue-700">
+                            <?= htmlspecialchars($professor["cargo"], ENT_QUOTES, "UTF-8") ?>
+                        </p>
 
-    <?php endforeach; ?>
+                        <div class="mt-5 space-y-1 text-gray-600">
 
-</div>
+                            <p>
+                                <strong class="text-gray-900">Formação:</strong>
+                                <?= htmlspecialchars($professor["formacao"], ENT_QUOTES, "UTF-8") ?>
+                            </p>
+
+                            <?php if (!empty($professor["pos_graduacao"])): ?>
+                                <p>
+                                    <strong class="text-gray-900">Pós-graduação:</strong>
+                                    <?= htmlspecialchars($professor["pos_graduacao"], ENT_QUOTES, "UTF-8") ?>
+                                </p>
+                            <?php endif; ?>
+
+                            <p>
+                                <strong class="text-gray-900">Experiência:</strong>
+                                <?= htmlspecialchars($professor["experiencia"], ENT_QUOTES, "UTF-8") ?>
+                            </p>
+
+                        </div>
+
+                    </div>
+                </article>
+
+            <?php endforeach; ?>
 
         </div>
-    </section>
+    </div>
+</section>
+
     <section id="depoimentos" class="bg-white py-20">
 
         <div class="mx-auto max-w-6xl px-6">
@@ -1056,6 +1065,12 @@ function versaoImagem($arquivo)
 
                         <a href="#missao">
                             Missão e Valores
+                        </a>
+                        <a href="#professores">
+                            Professores
+                        </a>
+                        <a href="#depoimentos">
+                            Depoimentos
                         </a>
 
                     </div>
